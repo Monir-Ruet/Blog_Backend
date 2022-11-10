@@ -1,0 +1,3 @@
+Product Adding Api:
+1.Form [title,body,author,tags[]  ],
+
