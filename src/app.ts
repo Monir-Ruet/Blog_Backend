@@ -1,6 +1,7 @@
 import express , { Application } from "express";
 import cors from 'cors';
 import 'module-alias/register'
+import 'dotenv/config'
 import compression from 'compression';
 import ErrorMiddleware from '@/Middleware/Error.middleware'
 import Controller from '@/Interfaces/controller.interface'
@@ -31,16 +32,20 @@ class App{
             this.express.use('/'+controller.path,controller.router);
         })
     }
-    private initializeDatabase(){
-        const url = `mongodb://127.0.0.1:27017/Monir`;
-        mongoose.connect(url);
-        let connection=mongoose.connection;
-        connection.on('Connected',()=>{
-            console.log('[+] Database connection established...');
-            connection.on('Disconnected',()=>{
-              console.log('[-] Database connection lost...')
+    private async initializeDatabase(){
+        const url=<string>process.env.MONGO_URI;
+        try{
+            await mongoose.connect(url);
+            let connection=mongoose.connection;
+            connection.on('connected',()=>{
+                console.log('[+] Database connection established...');
             })
-        })
+            connection.on('disconnected',()=>{
+                console.log('[-] Database connection lost...')
+            })
+        }catch(err){
+            console.log(err);
+        }
     }
     public listen():void{
         this.express.listen(this.port,()=>{

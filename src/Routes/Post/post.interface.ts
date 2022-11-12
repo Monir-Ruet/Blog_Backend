@@ -14,7 +14,11 @@ interface IEdit{
     body:string,
     tags:string[]
 }
+interface QueryPostString{
+    tags?:object;
+}
 export {
     IEdit,
-    Post
+    Post,
+    QueryPostString
 }
